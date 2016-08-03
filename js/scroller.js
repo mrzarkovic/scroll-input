@@ -5,18 +5,21 @@ var Scroller = function (options) {
 	this.scrollerInner = this.scroller.find("[data-role='scroller-inner']");
 	this.scrollerInnerHeight = parseInt(this.scrollerInner.css("height"));
 	
+	this.currentItem = 0;
 	this.started = false;
 	this.startY = 0;
 	this.step = this.itemHeight / 4;
-	this.currentScrollTop = 0;
-	this.lastDiff = 0;
+	this.currentMarginTop = 0;
 	this.delta = 0;
+	this.maxMargin = 2 * this.itemHeight;
+	this.minMagin = -this.scrollerInnerHeight + 3 * this.itemHeight;
 
 	this.init();
 };
 
 Scroller.prototype.init = function() {
 	this.setInitObservers();
+	this.setCurrentItem();
 };
 
 Scroller.prototype.setInitObservers = function() {
@@ -26,48 +29,104 @@ Scroller.prototype.setInitObservers = function() {
 };
 
 Scroller.prototype.handleTouchStart = function (evt) {
-	//evt.preventDefault();
+	evt.preventDefault();
 	this.started = true;
 	this.scrollerInner.stop();
 	this.startY = evt.changedTouches[0].pageY;
 };
 
 Scroller.prototype.handleTouchMove = function (evt) {
-	//evt.preventDefault();
-	
+	evt.preventDefault();
+	var touches = evt.changedTouches;
+	var currentY = touches[0].pageY;
+	var diff = this.startY - currentY;
+	var marginTop = Math.ceil(this.currentMarginTop - diff);
+
+	this.scrollerInner.css({
+		marginTop: marginTop + "px",
+	});
 };
 
 Scroller.prototype.handleTouchEnd = function (evt) {
-	//evt.preventDefault();
+	evt.preventDefault();
+	var currentY = evt.changedTouches[0].pageY;
 	this.started = false;
-	this.currentScrollTop = this.scroller.scrollTop();
-
-	//TODO: find element and get his parent offset that scroll parent to that element
-	//TODO: 
-
-	var touches = evt.changedTouches;
-	var currentY = touches[0].pageY;
+	this.currentMarginTop = parseInt(this.scrollerInner.css("marginTop"));
 	this.delta = this.startY - currentY;
-	console.log(this.currentScrollTop);
 
-	if (this.delta < 0) {
-		// Up
-		console.log("going up");
-		if (this.currentScrollTop % this.itemHeight < this.itemHeight - this.step) {
-			console.log("move up");
-			this.currentScrollTop = Math.ceil(this.currentScrollTop / this.itemHeight) * this.itemHeight;
-		}
+	//console.log(this.delta);
+
+	if (this.currentMarginTop > this.maxMargin) {
+		// Max margin
+		this.currentMarginTop = this.maxMargin;
+	} else if (this.currentMarginTop < this.minMagin) {
+		// Min margin
+		this.currentMarginTop = this.minMagin;
 	} else {
-		// Down
-		console.log("going down");
-		if (this.currentScrollTop % this.itemHeight > this.step) {
-			console.log("move down");
-			this.currentScrollTop = Math.ceil(this.currentScrollTop / this.itemHeight) * this.itemHeight;
+		if (this.delta < 0) {
+			// Up
+			//console.log("going up");
+			if (this.currentMarginTop < 0) {
+				if (Math.abs(this.currentMarginTop) % this.itemHeight < this.itemHeight - this.step) {
+					//console.log("snap to prev");
+					this.currentMarginTop = - this.snapToLower();
+				} else {
+					//console.log("snap to next");
+					this.currentMarginTop = - this.snapToHigher();
+				}
+			} else {
+				if (Math.abs(this.currentMarginTop) % this.itemHeight < this.step) {
+					//console.log("snap to prev");
+					this.currentMarginTop = this.snapToLower();
+				} else {
+					//console.log("snap to nexta");
+					this.currentMarginTop = this.snapToHigher();
+				}
+			}
+		} else {
+			// Down
+			//console.log("going down");
+
+			if (this.currentMarginTop < 0) {
+				if (Math.abs(this.currentMarginTop) % this.itemHeight > this.step) {
+					//console.log("snap to next");
+					this.currentMarginTop = - this.snapToHigher();
+				} else {
+					//console.log("snap to prev");
+					this.currentMarginTop = - this.snapToLower();
+				}
+			} else {
+				if (Math.abs(this.currentMarginTop) % this.itemHeight > this.itemHeight - this.step) {
+					//console.log("snap to nexta");
+					this.currentMarginTop = this.snapToHigher();
+				} else {
+					//console.log("snap to prev");
+					this.currentMarginTop = this.snapToLower();
+				}
+			}
 		}
 	}
-	this.currentScrollTop = this.currentScrollTop - Math.ceil(this.currentScrollTop / this.itemHeight);
-	console.log("final: " + this.currentScrollTop);
-	this.scroller.animate({
-		scrollTop: this.currentScrollTop + "px",
+	
+	this.scrollerInner.animate({
+		marginTop: this.currentMarginTop + "px",
 	}, 100);
+
+	this.setCurrentItem();
 };
+
+Scroller.prototype.snapToHigher = function() {
+	return (Math.ceil(Math.abs(this.currentMarginTop) / this.itemHeight) * this.itemHeight);
+};
+
+Scroller.prototype.snapToLower = function() {
+	return ((Math.ceil(Math.abs(this.currentMarginTop) / this.itemHeight) - 1 ) * this.itemHeight);
+};
+
+Scroller.prototype.setCurrentItem = function() {
+	this.currentItem = (- this.currentMarginTop + this.itemHeight * 3) / this.itemHeight;
+	this.scrollerInner.find("[data-role='scroller-item']").each(function(index) {
+		$(this).removeClass("current");
+	});
+	this.scrollerInner.find("[data-role='scroller-item'][data-order='" + this.currentItem + "']").addClass("current");
+	return;
+}

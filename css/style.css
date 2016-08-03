@@ -2,21 +2,46 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  color: #333;
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 14px;
 }
 * {
   box-sizing: border-box;
 }
 .container {
   height: 100%;
-  border: 1px solid #ff0000;
 }
 .scroller {
+  position: relative;
   width: 100px;
-  height: 102px;
-  border: 1px solid #00ff00;
-  overflow: scroll;
+  height: 252px;
+  border: 1px solid #ccc;
+  overflow: hidden;
 }
-.scroller-item {
+.scroller .scroller-inner .scroller-item {
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 1.2em;
+  opacity: 0.6;
+}
+.scroller .scroller-top-cover,
+.scroller .scroller-bottom-cover {
+  position: absolute;
+  left: 0;
+  right: 0;
   height: 100px;
-  border: 1px solid #0000ff;
+  background: rgba(0, 0, 0, 0.6);
+}
+.scroller .scroller-top-cover {
+  top: 0;
+}
+.scroller .scroller-bottom-cover {
+  bottom: 0;
+}
+.scroller .scroller-inner .scroller-item.current {
+  font-weight: bold;
+  opacity: 1;
+  font-size: 1.6em;
 }
