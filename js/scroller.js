@@ -3,23 +3,29 @@ var Scroller = function (options) {
 	this.scroller = $('#' + this.options['scrollerId']);
 	this.itemHeight = this.options['itemHeight'];
 	this.scrollerInner = this.scroller.find("[data-role='scroller-inner']");
-	this.scrollerInnerHeight = parseInt(this.scrollerInner.css("height"));
-	
-	this.currentItem = 0;
-	this.started = false;
-	this.startY = 0;
-	this.step = this.itemHeight / 4;
-	this.currentMarginTop = 0;
-	this.delta = 0;
-	this.maxMargin = 2 * this.itemHeight;
-	this.minMagin = -this.scrollerInnerHeight + 3 * this.itemHeight;
+	this.scrollerValues = this.options['values'];
 
 	this.init();
 };
 
 Scroller.prototype.init = function() {
+	this.populateScrollerItems();
+	this.setInitValues();
 	this.setInitObservers();
 	this.setCurrentItem();
+};
+
+Scroller.prototype.setInitValues = function() {
+	this.scrollerInnerHeight = parseInt(this.scrollerInner.css("height"));
+	this.maxMargin = 2 * this.itemHeight;
+	this.minMagin = -this.scrollerInnerHeight + 3 * this.itemHeight;
+	this.currentItem = 0;
+	this.started = false;
+	this.timeSwipeStarted = 0;
+	this.startY = 0;
+	this.step = this.itemHeight / 4;
+	this.currentMarginTop = 0;
+	this.delta = 0;
 };
 
 Scroller.prototype.setInitObservers = function() {
@@ -30,9 +36,11 @@ Scroller.prototype.setInitObservers = function() {
 
 Scroller.prototype.handleTouchStart = function (evt) {
 	evt.preventDefault();
+	var date = new Date();
 	this.started = true;
 	this.scrollerInner.stop();
 	this.startY = evt.changedTouches[0].pageY;
+	this.timeSwipeStarted = date.getTime();
 };
 
 Scroller.prototype.handleTouchMove = function (evt) {
@@ -49,10 +57,28 @@ Scroller.prototype.handleTouchMove = function (evt) {
 
 Scroller.prototype.handleTouchEnd = function (evt) {
 	evt.preventDefault();
-	var currentY = evt.changedTouches[0].pageY;
+	var date = new Date(),
+		timeSwipeEnded = date.getTime(),
+		timeDiff = timeSwipeEnded - this.timeSwipeStarted,
+		currentY = evt.changedTouches[0].pageY;
+
+	//console.log("time diff: " + timeDiff);
+
 	this.started = false;
 	this.currentMarginTop = parseInt(this.scrollerInner.css("marginTop"));
 	this.delta = this.startY - currentY;
+
+	//console.log("swipe delta: " + this.delta);
+
+	if (this.delta == 0) return;
+
+	if (timeDiff < 150 && Math.abs(this.delta) > 200) {
+		if (this.delta < 0) {
+			this.currentMarginTop = this.currentMarginTop + 3 * this.itemHeight;
+		} else {
+			this.currentMarginTop = this.currentMarginTop - 3 * this.itemHeight;
+		}
+	}
 
 	//console.log(this.delta);
 
@@ -129,4 +155,16 @@ Scroller.prototype.setCurrentItem = function() {
 	});
 	this.scrollerInner.find("[data-role='scroller-item'][data-order='" + this.currentItem + "']").addClass("current");
 	return;
-}
+};
+
+Scroller.prototype.populateScrollerItems = function() {
+	for (var i = 0; i < this.scrollerValues.length; i++) {
+		var itemTemplate = this.scrollerInner.find("[data-role='scroller-item-template']").clone(),
+			value = this.scrollerValues[i];
+		itemTemplate.attr("data-role", "scroller-item");
+		itemTemplate.attr("data-value", value);
+		itemTemplate.attr("data-order", i + 1);
+		itemTemplate.text(value);
+		this.scrollerInner.append(itemTemplate);
+	}
+};

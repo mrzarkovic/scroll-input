@@ -45,3 +45,6 @@ html, body {
   opacity: 1;
   font-size: 1.6em;
 }
+.scroller .scroller-inner .scroller-item[data-role="scroller-item-template"] {
+  display: none;
+}
