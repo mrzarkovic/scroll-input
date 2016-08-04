@@ -4,6 +4,7 @@ var Scroller = function (options) {
 	this.itemHeight = this.options['itemHeight'];
 	this.scrollerInner = this.scroller.find("[data-role='scroller-inner']");
 	this.scrollerValues = this.options['values'];
+	this.inputHolder = $('#' + this.options['inputHolder']);
 
 	this.init();
 };
@@ -11,30 +12,52 @@ var Scroller = function (options) {
 Scroller.prototype.init = function() {
 	this.populateScrollerItems();
 	this.setInitValues();
-	this.setInitObservers();
 	this.setCurrentItem();
+	this.setInitObservers();
 };
 
 Scroller.prototype.setInitValues = function() {
 	this.scrollerInnerHeight = parseInt(this.scrollerInner.css("height"));
 	this.maxMargin = 2 * this.itemHeight;
 	this.minMagin = -this.scrollerInnerHeight + 3 * this.itemHeight;
-	this.currentItem = 0;
+	this.currentItemId = 0;
 	this.started = false;
 	this.timeSwipeStarted = 0;
 	this.startY = 0;
 	this.step = this.itemHeight / 4;
 	this.currentMarginTop = 0;
 	this.delta = 0;
+	this.itemStartY = 0;
 };
 
 Scroller.prototype.setInitObservers = function() {
-	$("[data-role='scroller-outer']").on("touchstart", this.handleTouchStart.bind(this));
-	$("[data-role='scroller-outer']").on("touchmove", this.handleTouchMove.bind(this));
-	$("[data-role='scroller-outer']").on("touchend", this.handleTouchEnd.bind(this));
+	var _this = this;
+
+	this.scroller.on("touchstart", this.handleScrollerTouchStart.bind(this));
+	this.scroller.on("touchmove", this.handleScrollerTouchMove.bind(this));
+	this.scroller.on("touchend", this.handleScrollerTouchEnd.bind(this));
+	this.scrollerInner.find("[data-role='scroller-item']").each(function(i) {
+		$(this).on("touchstart", _this.handleItemTouchStart.bind(_this));
+		$(this).on("touchend", _this.handleItemTouchEnd.bind(_this));
+	});
 };
 
-Scroller.prototype.handleTouchStart = function (evt) {
+Scroller.prototype.handleItemTouchStart = function (evt) {
+	this.itemStartY = evt.changedTouches[0].pageY;
+};
+
+Scroller.prototype.handleItemTouchEnd = function (evt) {
+	var taget = evt.target,
+		itemCurrentY = evt.changedTouches[0].pageY,
+		delta = this.itemStartY - itemCurrentY;
+
+	if ($(taget).data("order") == this.currentItemId && delta == 0) {
+		// Selected item is clicked
+		this.inputHolder.addClass("show");
+	}
+};
+
+Scroller.prototype.handleScrollerTouchStart = function (evt) {
 	evt.preventDefault();
 	var date = new Date();
 	this.started = true;
@@ -43,7 +66,7 @@ Scroller.prototype.handleTouchStart = function (evt) {
 	this.timeSwipeStarted = date.getTime();
 };
 
-Scroller.prototype.handleTouchMove = function (evt) {
+Scroller.prototype.handleScrollerTouchMove = function (evt) {
 	evt.preventDefault();
 	var touches = evt.changedTouches;
 	var currentY = touches[0].pageY;
@@ -55,33 +78,74 @@ Scroller.prototype.handleTouchMove = function (evt) {
 	});
 };
 
-Scroller.prototype.handleTouchEnd = function (evt) {
+Scroller.prototype.handleScrollerTouchEnd = function (evt) {
 	evt.preventDefault();
 	var date = new Date(),
 		timeSwipeEnded = date.getTime(),
 		timeDiff = timeSwipeEnded - this.timeSwipeStarted,
-		currentY = evt.changedTouches[0].pageY;
+		currentY = evt.changedTouches[0].pageY,
+		momentumStep = 10;
 
-	//console.log("time diff: " + timeDiff);
+	console.log("time diff: " + timeDiff);
 
 	this.started = false;
 	this.currentMarginTop = parseInt(this.scrollerInner.css("marginTop"));
 	this.delta = this.startY - currentY;
 
-	//console.log("swipe delta: " + this.delta);
+	console.log("swipe delta: " + this.delta);
 
 	if (this.delta == 0) return;
 
+	// Momentum scroll
 	if (timeDiff < 150 && Math.abs(this.delta) > 200) {
+		if (Math.abs(this.delta) > 300) momentumStep = 50;
 		if (this.delta < 0) {
-			this.currentMarginTop = this.currentMarginTop + 3 * this.itemHeight;
+			this.currentMarginTop = this.currentMarginTop + momentumStep * this.itemHeight;
 		} else {
-			this.currentMarginTop = this.currentMarginTop - 3 * this.itemHeight;
+			this.currentMarginTop = this.currentMarginTop - momentumStep * this.itemHeight;
 		}
 	}
 
-	//console.log(this.delta);
+	this.correctMargin();
+	
+	this.scrollerInner.animate({
+		marginTop: this.currentMarginTop + "px",
+	}, 100);
 
+	this.setCurrentItem();
+};
+
+Scroller.prototype.snapToHigher = function() {
+	return (Math.ceil(Math.abs(this.currentMarginTop) / this.itemHeight) * this.itemHeight);
+};
+
+Scroller.prototype.snapToLower = function() {
+	return ((Math.ceil(Math.abs(this.currentMarginTop) / this.itemHeight) - 1 ) * this.itemHeight);
+};
+
+Scroller.prototype.setCurrentItem = function() {
+	this.currentItemId = (- this.currentMarginTop + this.itemHeight * 3) / this.itemHeight;
+	this.scrollerInner.find("[data-role='scroller-item']").each(function(index) {
+		$(this).removeClass("current");
+	});
+	this.scrollerInner.find("[data-role='scroller-item'][data-order='" + this.currentItemId + "']").addClass("current");
+	return;
+};
+
+Scroller.prototype.populateScrollerItems = function() {
+	for (var i = 0; i < this.scrollerValues.length; i++) {
+		var itemTemplate = this.scrollerInner.find("[data-role='scroller-item-template']").clone(),
+			value = this.scrollerValues[i];
+		itemTemplate.attr("data-role", "scroller-item");
+		itemTemplate.attr("data-value", value);
+		itemTemplate.attr("data-order", i + 1);
+		itemTemplate.text(value);
+		this.scrollerInner.append(itemTemplate);
+	}
+	return;
+};
+
+Scroller.prototype.correctMargin = function() {
 	if (this.currentMarginTop > this.maxMargin) {
 		// Max margin
 		this.currentMarginTop = this.maxMargin;
@@ -132,39 +196,5 @@ Scroller.prototype.handleTouchEnd = function (evt) {
 			}
 		}
 	}
-	
-	this.scrollerInner.animate({
-		marginTop: this.currentMarginTop + "px",
-	}, 100);
-
-	this.setCurrentItem();
-};
-
-Scroller.prototype.snapToHigher = function() {
-	return (Math.ceil(Math.abs(this.currentMarginTop) / this.itemHeight) * this.itemHeight);
-};
-
-Scroller.prototype.snapToLower = function() {
-	return ((Math.ceil(Math.abs(this.currentMarginTop) / this.itemHeight) - 1 ) * this.itemHeight);
-};
-
-Scroller.prototype.setCurrentItem = function() {
-	this.currentItem = (- this.currentMarginTop + this.itemHeight * 3) / this.itemHeight;
-	this.scrollerInner.find("[data-role='scroller-item']").each(function(index) {
-		$(this).removeClass("current");
-	});
-	this.scrollerInner.find("[data-role='scroller-item'][data-order='" + this.currentItem + "']").addClass("current");
 	return;
-};
-
-Scroller.prototype.populateScrollerItems = function() {
-	for (var i = 0; i < this.scrollerValues.length; i++) {
-		var itemTemplate = this.scrollerInner.find("[data-role='scroller-item-template']").clone(),
-			value = this.scrollerValues[i];
-		itemTemplate.attr("data-role", "scroller-item");
-		itemTemplate.attr("data-value", value);
-		itemTemplate.attr("data-order", i + 1);
-		itemTemplate.text(value);
-		this.scrollerInner.append(itemTemplate);
-	}
 };

@@ -8,5 +8,6 @@ $( document ).ready(function() {
 		scrollerId: 'scroller',
 		itemHeight: 50,
 		values: scrollerValues,
+		inputHolder: 'input-holder',
 	});
 });
