@@ -51,7 +51,7 @@ Scroller.prototype.setInitObservers = function() {
 		$(this).on("touchstart", _this.handleItemTouchStart.bind(_this));
 		$(this).on("touchend", _this.handleItemTouchEnd.bind(_this));
 	});
-	this.theInput.on("blur", this.setScrollerPositionByValue.bind(this));
+	//this.theInput.on("blur", this.setScrollerPositionByValue.bind(this));
 	this.theInput.on("keyup", function(evt) {
 		if (evt.keyCode == 13) {
 			_this.setScrollerPositionByValue();
@@ -126,7 +126,7 @@ Scroller.prototype.handleScrollerTouchMove = function (evt) {
 };
 
 /**
- * Calculate and set the snap ponint afther touch event has ended.
+ * Calculate and set the snap point after drag event has ended
  * @param  {event}
  */
 Scroller.prototype.handleScrollerTouchEnd = function (evt) {
@@ -290,4 +290,8 @@ Scroller.prototype.setCurrentItemStyle = function() {
 		$(this).removeClass("current");
 	});
 	this.scrollerInner.find("[data-role='scroller-item'][data-order='" + this.currentItemId + "']").addClass("current");
+};
+
+Scroller.prototype.getCurrentValue = function() {
+	return this.scrollerValues[this.currentItemId - 1];
 };

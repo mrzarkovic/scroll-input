@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>MrauMrau 2.0</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
 	<script type="text/javascript" src="js/mrau-mrau.js"></script>
+	<script type="text/javascript" src="js/player.js"></script>
 	<script type="text/javascript" src="js/scroller.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<a href="javascript:;" onclick="mrauMrau.addNewScroller()">new</a>
-	<div id="container" class="container">
+	<a href="javascript:;" data-role="add-new-player">add new player</a>
+	<a href="javascript:;" data-role="add-new-round">new round</a>
+	<div id="scrollers-container" class="scrollers-container">
 		<div class="scroller" data-role="scroller-template" data-id="0">
-			<div class="scroller-top-cover"></div>
-			<div class="scroller-inner" data-role="scroller-inner">
-				<div class="scroller-item" data-role="scroller-item-template" data-value="0" data-order="0"></div>
-				<div data-role="input-holder" class="input-holder">
-					<input data-role="the-input" type="number" id="" value="" />
+			<div class="scroller-outer">
+				<div class="scroller-top-cover"></div>
+				<div class="scroller-inner" data-role="scroller-inner">
+					<div class="scroller-item" data-role="scroller-item-template" data-value="0" data-order="0"></div>
+					<div data-role="input-holder" class="input-holder">
+						<input data-role="the-input" type="number" id="" value="" />
+					</div>
 				</div>
+				<div class="scroller-bottom-cover"></div>
 			</div>
-			<div class="scroller-bottom-cover"></div>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/app.js"></script>

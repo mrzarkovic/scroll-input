@@ -9,59 +9,65 @@ html, body {
 * {
   box-sizing: border-box;
 }
-.container {
-  height: 100%;
+.scrollers-container {
+  height: 252px;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
 }
 .scroller {
+  display: table-cell;
+}
+.scroller-outer {
   display: inline-block;
   position: relative;
-  width: 100px;
+  width: 100%;
   height: 252px;
   border: 1px solid #ccc;
   background-color: #333;
   color: #fff;
   overflow: hidden;
 }
-.scroller .scroller-inner .scroller-item {
+.scroller-outer .scroller-inner .scroller-item {
   height: 50px;
   text-align: center;
   line-height: 50px;
   font-size: 1.2em;
   opacity: 0.6;
 }
-.scroller .scroller-top-cover,
-.scroller .scroller-bottom-cover {
+.scroller-outer .scroller-top-cover,
+.scroller-outer .scroller-bottom-cover {
   position: absolute;
-  left: 0;
-  right: 0;
+  width: 100%;
   height: 100px;
   z-index: 1;
   background: rgba(0, 0, 0, 0.6);
 }
-.scroller .scroller-top-cover {
+.scroller-outer .scroller-top-cover {
   top: 0;
 }
-.scroller .scroller-bottom-cover {
+.scroller-outer .scroller-bottom-cover {
   bottom: 0;
 }
-.scroller .scroller-inner .scroller-item.current {
+.scroller-outer .scroller-inner .scroller-item.current {
   font-weight: bold;
   opacity: 1;
   font-size: 1.6em;
 }
 .scroller[data-role="scroller-template"],
-.scroller .scroller-inner .scroller-item[data-role="scroller-item-template"] {
+.scroller-outer .scroller-inner .scroller-item[data-role="scroller-item-template"] {
   display: none;
 }
-.scroller .scroller-inner .input-holder {
+.scroller-outer .scroller-inner .input-holder {
   display: none;
   position: absolute;
+  width: 100%;
   top: 100px;
 }
-.scroller .scroller-inner .input-holder.show {
+.scroller-outer .scroller-inner .input-holder.show {
   display: block;
 }
-.scroller .scroller-inner .input-holder input[type="number"] {
+.scroller-outer .scroller-inner .input-holder input[type="number"] {
     line-height: 50px;
     height: 50px;
     width: 100%;
