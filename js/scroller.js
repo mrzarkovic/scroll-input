@@ -1,6 +1,6 @@
 var Scroller = function (options) {
 	this.options = options || {};
-	this.scroller = $('#' + this.options['scrollerId']);
+	this.scroller = $("[data-role='scroller'][data-id='" + this.options['scrollerId'] + "']");
 	this.scrollerInner = this.scroller.find("[data-role='scroller-inner']");
 	this.inputHolder = this.scroller.find("[data-role='input-holder']");
 	this.theInput = this.inputHolder.find("[data-role='the-input']")
@@ -16,7 +16,7 @@ var Scroller = function (options) {
 Scroller.prototype.init = function() {
 	this.populateScrollerItems();
 	this.setInitValues();
-	this.setCurrentItemByMargin();
+	this.setCurrentItemIdByMargin();
 	this.setCurrentItemStyle();
 	this.setInitObservers();
 };
@@ -36,7 +36,6 @@ Scroller.prototype.setInitValues = function() {
 	this.currentMarginTop = 0;
 	this.delta = 0;
 	this.itemStartY = 0;
-	//TODO: set initial focus item ID
 };
 
 /**
@@ -52,16 +51,20 @@ Scroller.prototype.setInitObservers = function() {
 		$(this).on("touchstart", _this.handleItemTouchStart.bind(_this));
 		$(this).on("touchend", _this.handleItemTouchEnd.bind(_this));
 	});
-	this.theInput.on("blur", this.handleInputBlur.bind(this));
+	this.theInput.on("blur", this.setScrollerPositionByValue.bind(this));
+	this.theInput.on("keyup", function(evt) {
+		if (evt.keyCode == 13) {
+			_this.setScrollerPositionByValue();
+		}
+	});
 };
 
 /**
  * Set the new element in focus (current item) based on the input value
- * @param  {event}
  */
-Scroller.prototype.handleInputBlur = function (evt) {
+Scroller.prototype.setScrollerPositionByValue = function () {
 	this.inputHolder.removeClass("show");
-	this.setCurrentItemByInput();
+	this.setCurrentItemIdByInput();
 	this.setCurrentItemStyle();
 	this.setMarginByCurrentItem();
 	this.scrollerInner.css({
@@ -82,6 +85,7 @@ Scroller.prototype.handleItemTouchStart = function (evt) {
  * @param  {event}
  */
 Scroller.prototype.handleItemTouchEnd = function (evt) {
+	evt.preventDefault();
 	var taget = evt.target,
 		itemCurrentY = evt.changedTouches[0].pageY,
 		delta = this.itemStartY - itemCurrentY;
@@ -89,6 +93,7 @@ Scroller.prototype.handleItemTouchEnd = function (evt) {
 	if ($(taget).data("order") == this.currentItemId && delta == 0) {
 		// Selected item is clicked
 		this.inputHolder.addClass("show");
+		this.theInput.select();
 	}
 };
 
@@ -158,7 +163,7 @@ Scroller.prototype.handleScrollerTouchEnd = function (evt) {
 		marginTop: this.currentMarginTop + "px",
 	}, 100);
 
-	this.setCurrentItemByMargin();
+	this.setCurrentItemIdByMargin();
 	this.setCurrentItemStyle();
 };
 
@@ -254,16 +259,16 @@ Scroller.prototype.correctMargin = function() {
 };
 
 /**
- * Set the current item in focus based on the scroll position
+ * Set the current item ID based on the scroll position
  */
-Scroller.prototype.setCurrentItemByMargin = function() {
+Scroller.prototype.setCurrentItemIdByMargin = function() {
 	this.currentItemId = (- this.currentMarginTop + this.itemHeight * 3) / this.itemHeight;
 };
 
 /**
- * Set the current item in focus based on the scroll position
+ * Set the current item ID based on the input value
  */
-Scroller.prototype.setCurrentItemByInput = function() {
+Scroller.prototype.setCurrentItemIdByInput = function() {
 	var inputValue = parseInt(this.theInput.val());
 	if (this.scrollerValues.indexOf(inputValue) !== -1) {
 		this.currentItemId = this.scrollerValues.indexOf(inputValue) + 1;
