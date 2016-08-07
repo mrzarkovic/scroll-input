@@ -134,7 +134,7 @@ Scroller.prototype.handleScrollerTouchEnd = function (evt) {
 		timeSwipeEnded = date.getTime(),
 		timeDiff = timeSwipeEnded - this.timeSwipeStarted,
 		currentY = evt.changedTouches[0].pageY,
-		momentumStep = 10;
+		momentumStep = 50;
 
 	//console.log("time diff: " + timeDiff);
 
@@ -147,9 +147,9 @@ Scroller.prototype.handleScrollerTouchEnd = function (evt) {
 	if (this.delta == 0) return;
 
 	// Momentum scroll
-	if (timeDiff < 150 && Math.abs(this.delta) > 150) {
-		if (Math.abs(this.delta) > 250) momentumStep = 50;
-		if (Math.abs(this.delta) > 300) momentumStep = 100;
+	if (timeDiff < 150 && Math.abs(this.delta) > 100) {
+		if (Math.abs(this.delta) > 150) momentumStep = 100;
+		if (Math.abs(this.delta) > 200) momentumStep = 200;
 		if (this.delta < 0) {
 			this.currentMarginTop = this.currentMarginTop + momentumStep * this.itemHeight;
 		} else {

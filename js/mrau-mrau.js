@@ -79,6 +79,32 @@ MrauMrau.prototype.addNewRound = function() {
 	this.noOfRounds++;
 	for (var i = 0; i < this.noOfPlayers; i++) {
 		this.players[i].addScore();
+		//TODO:
+		var redZone = 400,
+			yellowZone = 250,
+			greenZone = 0,
+			blueZone = -20;
+		if (this.players[i].score >= redZone) {
+			this.players[i].scrollerObject.scroller.addClass("red");
+			this.players[i].scrollerObject.scroller.removeClass("yellow");
+			this.players[i].scrollerObject.scroller.removeClass("green");
+			this.players[i].scrollerObject.scroller.removeClass("blue");
+		} else if (this.players[i].score >= yellowZone) {
+			this.players[i].scrollerObject.scroller.addClass("yellow");
+			this.players[i].scrollerObject.scroller.removeClass("red");
+			this.players[i].scrollerObject.scroller.removeClass("green");
+			this.players[i].scrollerObject.scroller.removeClass("blue");
+		} else if (this.players[i].score >= greenZone) {
+			this.players[i].scrollerObject.scroller.addClass("green");
+			this.players[i].scrollerObject.scroller.removeClass("red");
+			this.players[i].scrollerObject.scroller.removeClass("yellow");
+			this.players[i].scrollerObject.scroller.removeClass("blue");
+		} else {
+			this.players[i].scrollerObject.scroller.addClass("blue");
+			this.players[i].scrollerObject.scroller.removeClass("red");
+			this.players[i].scrollerObject.scroller.removeClass("yellow");
+			this.players[i].scrollerObject.scroller.removeClass("green");
+		}
 	}
 	this.setCurrentDealer();
 	this.resetScrollers();

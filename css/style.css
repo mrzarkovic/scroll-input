@@ -3,17 +3,28 @@ html, body {
   margin: 0;
   padding: 0;
   color: #333;
+  background-color: #333;
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 14px;
 }
 * {
   box-sizing: border-box;
 }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 .scrollers-container {
   height: 252px;
   width: 100%;
   display: table;
   table-layout: fixed;
+}
+.scrollers-container .scroller {
+  border-right: 1px solid #333;
+}
+.scrollers-container .scroller:last-of-type {
+  border-right: 0;
 }
 .scroller {
   display: table-cell;
@@ -28,6 +39,21 @@ html, body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  background-color: #333;
+}
+.scroller.green .scroller-outer {
+  background-color: #87b341;
+}
+.scroller.yellow .scroller-outer {
+  background-color: #d2c740;
+}
+.scroller.red .scroller-outer {
+  background-color: #b52626;
+}
+.scroller.blue .scroller-outer  {
+  background-color: #44a9b9;
 }
 .scroller.dealer .player-name {
   font-weight: bold;
@@ -38,8 +64,8 @@ html, body {
   width: 100%;
   height: 200px;
   /*border: 1px solid #ccc;*/
-  background-color: #333;
   color: #fff;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 .scroller-outer .scroller-inner .scroller-item {
@@ -55,7 +81,7 @@ html, body {
   width: 100%;
   height: 80px;
   z-index: 1;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
 }
 .scroller-outer .scroller-top-cover {
   top: 0;
@@ -76,22 +102,22 @@ html, body {
   display: none;
   position: absolute;
   width: 100%;
-  top: 100px;
+  top: 80px;
 }
 .scroller-outer .scroller-inner .input-holder.show {
   display: block;
 }
 .scroller-outer .scroller-inner .input-holder input[type="number"] {
-    line-height: 50px;
-    height: 50px;
-    width: 100%;
-    text-align: center;
-    font-size: 1.6em;
+  line-height: 40px;
+  height: 40px;
+  width: 100%;
+  text-align: center;
+  font-size: 1.6em;
 }
 .controlls-bar {
   height: 40px;
+  color: #fff;
 }
-
 .player-profile {
   display: none;
   position: fixed;
@@ -102,11 +128,9 @@ html, body {
   background-color: rgba(0, 0 , 0, 0.8);
   z-index: 2;
 }
-
 .player-profile.open {
   display: block;
 }
-
 .player-profile .profile-content {
   position: relative;
   width: 80%;
