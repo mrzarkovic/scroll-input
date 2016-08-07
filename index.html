@@ -10,10 +10,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<a href="javascript:;" data-role="add-new-player">add new player</a>
-	<a href="javascript:;" data-role="add-new-round">new round</a>
+	<div id="controlls-bar" class="controlls-bar">
+		<input type="text" class="new-player-name" data-role="new-player-name">
+		<a href="javascript:;" data-role="add-new-player">add new player</a>
+		<a href="javascript:;" data-role="add-new-round">new round</a>
+	</div>
 	<div id="scrollers-container" class="scrollers-container">
 		<div class="scroller" data-role="scroller-template" data-id="0">
+			<div class="player-name" data-role="player-name"></div>
 			<div class="scroller-outer">
 				<div class="scroller-top-cover"></div>
 				<div class="scroller-inner" data-role="scroller-inner">
@@ -24,6 +28,14 @@
 				</div>
 				<div class="scroller-bottom-cover"></div>
 			</div>
+			<div class="player-score" data-role="player-score"></div>
+		</div>
+	</div>
+	<div id="player-profile" class="player-profile" data-player-id="0">
+		<div class="profile-content" data-role="profile-content">
+			<input type="text" data-role="edit-player-name" value="">
+			<a href="javascript:;" data-role="save-player">save</a>
+			<a href="javascript:;" data-role="remove-player">remove</a>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/app.js"></script>

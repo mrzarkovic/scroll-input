@@ -4,8 +4,8 @@ var Scroller = function (options) {
 	this.scrollerInner = this.scroller.find("[data-role='scroller-inner']");
 	this.inputHolder = this.scroller.find("[data-role='input-holder']");
 	this.theInput = this.inputHolder.find("[data-role='the-input']")
-	this.itemHeight = this.options['itemHeight'];
-	this.scrollerValues = this.options['values'];
+	this.itemHeight = this.options["itemHeight"];
+	this.scrollerValues = this.options["values"];
 
 	this.init();
 };
@@ -51,7 +51,7 @@ Scroller.prototype.setInitObservers = function() {
 		$(this).on("touchstart", _this.handleItemTouchStart.bind(_this));
 		$(this).on("touchend", _this.handleItemTouchEnd.bind(_this));
 	});
-	//this.theInput.on("blur", this.setScrollerPositionByValue.bind(this));
+	this.theInput.on("blur", this.setScrollerPositionByValue.bind(this));
 	this.theInput.on("keyup", function(evt) {
 		if (evt.keyCode == 13) {
 			_this.setScrollerPositionByValue();
@@ -292,6 +292,29 @@ Scroller.prototype.setCurrentItemStyle = function() {
 	this.scrollerInner.find("[data-role='scroller-item'][data-order='" + this.currentItemId + "']").addClass("current");
 };
 
+/**
+ * Get the current scroller value
+ * @return {int} Current scroller value
+ */
 Scroller.prototype.getCurrentValue = function() {
 	return this.scrollerValues[this.currentItemId - 1];
+};
+
+/**
+ * Remove the scroller from the DOM
+ */
+Scroller.prototype.removeScroller = function() {
+	this.scroller.remove();
+};
+
+/**
+ * Reset scroller to initial state
+ */
+Scroller.prototype.resetScroller = function() {
+	this.currentMarginTop = 0;
+	this.scrollerInner.css({
+		marginTop: this.currentMarginTop + "px",
+	});
+	this.setCurrentItemIdByMargin();
+	this.setCurrentItemStyle();
 };
