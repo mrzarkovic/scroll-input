@@ -42,8 +42,9 @@ MrauMrau.prototype.setInitObservers = function() {
 };
 
 MrauMrau.prototype.handleProfileClick = function(evt) {
-	var target = evt.target;
-	if ($(target).attr("id") == "player-profile") {
+	var target = evt.target,
+		targetRole = $(target).attr("data-role");
+	if ($(target).attr("id") == "player-profile" || targetRole == "close-profile") {
 		this.closePlayerProfile();
 	}
 };
@@ -146,6 +147,8 @@ MrauMrau.prototype.savePlayer = function() {
 		if (this.players[i].id == playerId) {
 			var player = this.players[i];
 			player.name = this.playerProfile.find("[data-role='edit-player-name']").val();
+			player.score = parseInt(this.playerProfile.find("[data-role='edit-player-score']").val());
+			player.addPlayerScoreToScroller();
 			player.addPlayerNameToScroller();
 			this.closePlayerProfile();
 			return;
@@ -164,7 +167,8 @@ MrauMrau.prototype.showPlayerProfile = function(evt, playerId) {
 		if (this.players[i].id == playerId) {
 			var player = this.players[i];
 			this.playerProfile.attr("data-player-id", player.id);
-			this.playerProfile.find("[data-role='edit-player-name']").val(player.name).focus();
+			this.playerProfile.find("[data-role='edit-player-name']").val(player.name);
+			this.playerProfile.find("[data-role='edit-player-score']").val(player.score);
 			this.playerProfile.addClass("open");
 			return;
 		}

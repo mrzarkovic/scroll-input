@@ -21,7 +21,7 @@ a {
   table-layout: fixed;
 }
 .scrollers-container .scroller {
-  border-right: 1px solid #333;
+  border-right: 1px solid transparent;
 }
 .scrollers-container .scroller:last-of-type {
   border-right: 0;
@@ -34,14 +34,17 @@ a {
 .scroller .player-score {
   height: 30px;
   text-align: center;
-  font-size: 1.2em;
-  line-height: 1.8em;
+  font-size: 1.3em;
+  line-height: 1.3em;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
   color: #fff;
   background-color: #333;
+}
+.scroller .player-score {
+  font-size: 1.6em;
 }
 .scroller.green .scroller-outer {
   background-color: #87b341;
@@ -65,7 +68,7 @@ a {
   height: 200px;
   /*border: 1px solid #ccc;*/
   color: #fff;
-  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 .scroller-outer .scroller-inner .scroller-item {
@@ -107,20 +110,29 @@ a {
 .scroller-outer .scroller-inner .input-holder.show {
   display: block;
 }
-.scroller-outer .scroller-inner .input-holder input[type="number"] {
-  line-height: 40px;
-  height: 40px;
-  width: 100%;
-  text-align: center;
-  font-size: 1.6em;
-}
 .controlls-bar {
-  height: 40px;
+  padding: 10px 0;
+}
+.button {
+  padding: 10px;
+  background-color: #666;
   color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+.button.secondary-button {
+  background-color: #999;
+}
+.controlls-bar .button {
+  display: inline-block;
+}
+.player-profile .button {
+  display: block;
+  margin-top: 15px;
 }
 .player-profile {
   display: none;
   position: fixed;
+  overflow: scroll;
   top: 0;
   bottom: 0;
   left: 0;
@@ -137,7 +149,83 @@ a {
   margin: 0 auto;
   background-color: #fff;
   padding: 10px;
-  margin-top: 100px;
+  margin-top: 15px;
   border-radius: 10px;
   z-index: 3;
+}
+.player-profile .profile-content .close-profile {
+  float: right;
+  padding: 10px;
+  margin-right: -10px;
+  margin-top: -10px;
+}
+.player-profile .profile-content .close-profile .close-icon {
+  position: relative;
+  background: #333;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 1.6em;
+  color: #fff;
+  font-size: 1.2em;
+  z-index: -1;
+}
+/* GREEDY CELL */
+.display-table {
+  display: table;
+  margin: 0 -8px;
+}
+.cell-greedy {
+  display: table-cell;
+  vertical-align: top;
+  width: 100%;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.cell-fixed {
+  display: table-cell;
+  vertical-align: top;
+  width: 1px;
+  white-space: nowrap;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* HELPERS */
+.align-right {
+  text-align: right;
+}
+
+/* FORM FIELDS */
+.controlls-bar input[type="text"],
+.player-profile input[type="text"] {
+  height: 40px;
+  font-size: 1.2em;
+  padding: 0 10px;
+  width: 100%;
+  color: #333;
+  border: 0;
+}
+.player-profile input[type="text"] {
+  border: 1px solid #ccc;
+}
+.scroller-outer .scroller-inner .input-holder input[type="number"] {
+  line-height: 40px;
+  height: 40px;
+  width: 100%;
+  text-align: center;
+  color: #333;
+  font-size: 1.6em;
+}
+.form-group {
+  padding: 10px 0;
+}
+/* BOOTSTRAP OVERRIDE */
+.row {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.container-fluid, .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  padding-left: 8px;
+  padding-right: 8px;
 }

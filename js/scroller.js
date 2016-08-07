@@ -52,8 +52,9 @@ Scroller.prototype.setInitObservers = function() {
 		$(this).on("touchend", _this.handleItemTouchEnd.bind(_this));
 	});
 	this.theInput.on("blur", this.setScrollerPositionByValue.bind(this));
-	this.theInput.on("keyup", function(evt) {
-		if (evt.keyCode == 13) {
+	this.theInput.on("keydown", function(evt) {
+		if (evt.keyCode == 13 || evt.keyCode == 9) {
+			evt.preventDefault();
 			_this.setScrollerPositionByValue();
 		}
 	});
