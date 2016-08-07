@@ -43,5 +43,6 @@ Player.prototype.removePlayer = function() {
 
 Player.prototype.handlePlayerProfile = function(evt) {
 	evt.preventDefault();
+	evt.stopPropagation();
 	$(document).trigger("mrau:showplayerprofile", [this.id]);
 };

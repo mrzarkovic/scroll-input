@@ -10,6 +10,8 @@ var MrauMrau = function (options) {
 	this.noOfPlayers = this.options["noOfPlayers"] || 0;
 	this.itemHeight = this.options["itemHeight"];
 	this.scrollerValues = this.options["values"];
+	//TODO: loader
+	this.loader = $("#loader");
 	
 	this.init();
 };
@@ -68,12 +70,14 @@ MrauMrau.prototype.addPlayer = function(id) {
 };
 
 MrauMrau.prototype.addNewPlayer = function() {
+	this.loader.addClass("show");
 	this.noOfPlayers++;
 	this.lastPlayerId++;
 	this.addPlayer(this.lastPlayerId);
 	if (this.noOfPlayers == 1) {
 		this.setCurrentDealer();
 	}
+	this.loader.removeClass("show");
 };
 
 MrauMrau.prototype.addNewRound = function() {

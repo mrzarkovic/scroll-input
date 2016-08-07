@@ -45,7 +45,7 @@
 				<div class="player-score" data-role="player-score"></div>
 			</div>
 		</div>
-		<div id="player-profile" class="player-profile" data-player-id="0">
+		<div id="player-profile" class="player-profile lightbox" data-player-id="0">
 			<div class="profile-content" data-role="profile-content">
 				<div class="close-profile" data-role="close-profile"><div class="close-icon">x</div></div>
 				<div class="form-group">
@@ -54,11 +54,13 @@
 				</div>
 				<div class="form-group">
 					<label for="score">score:</label>
-					<input type="text" id="score" class="edit-player-score" data-role="edit-player-score" value="">
+					<input type="number" id="score" class="edit-player-score" data-role="edit-player-score" value="">
 				</div>
 				<div data-role="remove-player" class="button secondary-button">remove player</div>
 				<div data-role="save-player" class="button">save changes</div>
 			</div>
+		</div>
+		<div id="loader" class="lightbox" data-player-id="0">
 		</div>
 	</div>
 	<script type="text/javascript" src="js/app.js"></script>

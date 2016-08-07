@@ -129,7 +129,7 @@ a {
   display: block;
   margin-top: 15px;
 }
-.player-profile {
+.lightbox {
   display: none;
   position: fixed;
   overflow: scroll;
@@ -140,7 +140,7 @@ a {
   background-color: rgba(0, 0 , 0, 0.8);
   z-index: 2;
 }
-.player-profile.open {
+.lightbox.open {
   display: block;
 }
 .player-profile .profile-content {
@@ -198,7 +198,8 @@ a {
 
 /* FORM FIELDS */
 .controlls-bar input[type="text"],
-.player-profile input[type="text"] {
+.player-profile input[type="text"],
+.player-profile input[type="number"] {
   height: 40px;
   font-size: 1.2em;
   padding: 0 10px;
@@ -206,7 +207,8 @@ a {
   color: #333;
   border: 0;
 }
-.player-profile input[type="text"] {
+.player-profile input[type="text"],
+.player-profile input[type="number"] {
   border: 1px solid #ccc;
 }
 .scroller-outer .scroller-inner .input-holder input[type="number"] {
@@ -216,6 +218,7 @@ a {
   text-align: center;
   color: #333;
   font-size: 1.6em;
+  border: 0;
 }
 .form-group {
   padding: 10px 0;

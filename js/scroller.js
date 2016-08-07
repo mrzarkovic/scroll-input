@@ -313,6 +313,7 @@ Scroller.prototype.removeScroller = function() {
  */
 Scroller.prototype.resetScroller = function() {
 	this.currentMarginTop = 0;
+	this.theInput.val("");
 	this.scrollerInner.css({
 		marginTop: this.currentMarginTop + "px",
 	});
