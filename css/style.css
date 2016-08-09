@@ -96,6 +96,7 @@ a {
   font-weight: bold;
   opacity: 1;
   font-size: 1.6em;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 .scroller[data-role="scroller-template"],
 .scroller-outer .scroller-inner .scroller-item[data-role="scroller-item-template"] {
@@ -139,15 +140,21 @@ a {
   right: 0;
   background-color: rgba(0, 0 , 0, 0.8);
   z-index: 2;
+  opacity: 0;
+  -webkit-transition: opacity 1500ms ease-out 1s;
+  -moz-transition: opacity 1500ms ease-out 1s;
+  -o-transition: opacity 1500ms ease-out 1s;
+  transition: opacity 1500ms ease-out 1s;
 }
-.lightbox.open {
+.lightbox.show {
   display: block;
+  opacity: 1;
 }
 .player-profile .profile-content {
   position: relative;
   width: 80%;
   margin: 0 auto;
-  background-color: #fff;
+  background-color: #b2b2b2;
   padding: 10px;
   margin-top: 15px;
   border-radius: 10px;
@@ -205,6 +212,7 @@ a {
   padding: 0 10px;
   width: 100%;
   color: #333;
+  background: #d2d2d2;
   border: 0;
 }
 .player-profile input[type="text"],

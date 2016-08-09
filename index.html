@@ -1,68 +1,94 @@
 <!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
 <html>
-<head>
-	<title>MrauMrau 2.0</title>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
-	<script type="text/javascript" src="js/mrau-mrau.js"></script>
-	<script type="text/javascript" src="js/player.js"></script>
-	<script type="text/javascript" src="js/scroller.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-	<div class="container-fluid">
-		<div id="controlls-bar" class="controlls-bar">
-			<div class="row">
-				<div class="col-xs-8">
-					<div class="display-table">
-						<div class="cell-greedy">
-							<input type="text" class="new-player-name" data-role="new-player-name">
-						</div>
-						<div class="cell-fixed">
-							<div data-role="add-new-player" class="button">add new player</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-4 align-right">
-					<div data-role="add-new-round" class="button">new round</div>
-				</div>
-			</div>
-		</div>
-		<div id="scrollers-container" class="scrollers-container">
-			<div class="scroller green" data-role="scroller-template" data-id="0">
-				<div class="player-name" data-role="player-name"></div>
-				<div class="scroller-outer">
-					<div class="scroller-top-cover"></div>
-					<div class="scroller-inner" data-role="scroller-inner">
-						<div class="scroller-item" data-role="scroller-item-template" data-value="0" data-order="0"></div>
-						<div data-role="input-holder" class="input-holder">
-							<input type="number" data-role="the-input">
-						</div>
-					</div>
-					<div class="scroller-bottom-cover"></div>
-				</div>
-				<div class="player-score" data-role="player-score"></div>
-			</div>
-		</div>
-		<div id="player-profile" class="player-profile lightbox" data-player-id="0">
-			<div class="profile-content" data-role="profile-content">
-				<div class="close-profile" data-role="close-profile"><div class="close-icon">x</div></div>
-				<div class="form-group">
-					<label for="name">name:</label>
-					<input type="text" id="name" class="edit-player-name" data-role="edit-player-name" value="">
-				</div>
-				<div class="form-group">
-					<label for="score">score:</label>
-					<input type="number" id="score" class="edit-player-score" data-role="edit-player-score" value="">
-				</div>
-				<div data-role="remove-player" class="button secondary-button">remove player</div>
-				<div data-role="save-player" class="button">save changes</div>
-			</div>
-		</div>
-		<div id="loader" class="lightbox" data-player-id="0">
-		</div>
-	</div>
-	<script type="text/javascript" src="js/app.js"></script>
-</body>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="js/mrau-mrau.js"></script>
+        <script type="text/javascript" src="js/player.js"></script>
+        <script type="text/javascript" src="js/scroller.js"></script>
+        <title>Mrau2</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+        <div id="controlls-bar" class="controlls-bar">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div data-role="add-new-player" class="button">add new player</div>
+                    <div data-role="reset-game" class="button">new game</div>
+                </div>
+                <div class="col-xs-4 align-right">
+                    <div data-role="add-new-round" class="button">new round</div>
+                </div>
+            </div>
+        </div>
+        <div id="scrollers-container" class="scrollers-container">
+            <div class="scroller" data-role="scroller-template" data-id="0">
+                <div class="player-name" data-role="player-name"></div>
+                <div class="scroller-outer" data-role="scroller-outer">
+                    <div class="scroller-top-cover"></div>
+                    <div class="scroller-inner" data-role="scroller-inner">
+                        <div class="scroller-item" data-role="scroller-item-template" data-value="0" data-order="0"></div>
+                        <div data-role="input-holder" class="input-holder">
+                            <input type="number" data-role="the-input">
+                        </div>
+                    </div>
+                    <div class="scroller-bottom-cover"></div>
+                </div>
+                <div class="player-score" data-role="player-score"></div>
+            </div>
+        </div>
+        <div id="player-profile" class="player-profile lightbox" data-player-id="0">
+            <div class="profile-content" data-role="profile-content">
+                <div class="close-profile" data-role="close-profile"><div class="close-icon">x</div></div>
+                <div class="form-group">
+                    <label for="name">name:</label>
+                    <input type="text" id="name" class="edit-player-name" data-role="edit-player-name" value="">
+                </div>
+                <div class="form-group">
+                    <label for="score">score:</label>
+                    <input type="number" id="score" class="edit-player-score" data-role="edit-player-score" value="">
+                </div>
+                <div data-role="remove-player" class="button secondary-button">remove player</div>
+                <div data-role="save-player" class="button">save changes</div>
+            </div>
+        </div>
+        <div id="loader" class="lightbox" data-player-id="0">
+        </div>
+    </div>
+        <!--<script type="text/javascript" src="cordova.js"></script>-->
+        <script type="text/javascript" src="js/index.js"></script>
+    </body>
 </html>

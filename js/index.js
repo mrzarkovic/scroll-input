@@ -26,7 +26,10 @@ var app = {
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
+        // Cordova 1/3
+        //document.addEventListener('deviceready', this.onDeviceReady, false);
+        //Desktop 1/1
+        this.onDeviceReady();
     },
     // deviceready Event Handler
     //
@@ -37,14 +40,25 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+        //console.log('Received Event: ' + id);
+        
+        //StatusBar.hide();
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+        // Cordova 2/3
+        //FastClick.attach(document.body);
+        
+        var scrollerValues = [-20, -10];
+        for (var i = 0; i <= 300; i++) {
+            scrollerValues.push(i);
+        }
 
-        console.log('Received Event: ' + id);
+        var mrauMrau = new MrauMrau({
+            scrollerContainerId: "scrollers-container",
+            controllsBarId: "controlls-bar",
+            playerProfileHolderId: "player-profile",
+            itemHeight: 40,
+            values: scrollerValues
+        }); 
     }
 };
 

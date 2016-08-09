@@ -2,6 +2,7 @@ var Scroller = function (options) {
 	this.options = options || {};
 	this.scroller = $("[data-role='scroller'][data-id='" + this.options['scrollerId'] + "']");
 	this.scrollerInner = this.scroller.find("[data-role='scroller-inner']");
+	this.scrollerOuter = this.scroller.find("[data-role='scroller-outer']");
 	this.inputHolder = this.scroller.find("[data-role='input-holder']");
 	this.theInput = this.inputHolder.find("[data-role='the-input']")
 	this.itemHeight = this.options["itemHeight"];
@@ -44,9 +45,9 @@ Scroller.prototype.setInitValues = function() {
 Scroller.prototype.setInitObservers = function() {
 	var _this = this;
 
-	this.scroller.on("touchstart", this.handleScrollerTouchStart.bind(this));
-	this.scroller.on("touchmove", this.handleScrollerTouchMove.bind(this));
-	this.scroller.on("touchend", this.handleScrollerTouchEnd.bind(this));
+	this.scrollerOuter.on("touchstart", this.handleScrollerTouchStart.bind(this));
+	this.scrollerOuter.on("touchmove", this.handleScrollerTouchMove.bind(this));
+	this.scrollerOuter.on("touchend", this.handleScrollerTouchEnd.bind(this));
 	this.scrollerInner.find("[data-role='scroller-item']").each(function(i) {
 		$(this).on("touchstart", _this.handleItemTouchStart.bind(_this));
 		$(this).on("touchend", _this.handleItemTouchEnd.bind(_this));
@@ -91,9 +92,10 @@ Scroller.prototype.handleItemTouchEnd = function (evt) {
 		itemCurrentY = evt.changedTouches[0].pageY,
 		delta = this.itemStartY - itemCurrentY;
 
-	if ($(taget).data("order") == this.currentItemId && delta == 0) {
+	if ($(taget).data("order") == this.currentItemId && Math.abs(delta) < 5) {
 		// Selected item is clicked
 		this.inputHolder.addClass("show");
+		evt.stopPropagation();
 		this.theInput.select();
 	}
 };
@@ -148,9 +150,9 @@ Scroller.prototype.handleScrollerTouchEnd = function (evt) {
 	if (this.delta == 0) return;
 
 	// Momentum scroll
-	if (timeDiff < 150 && Math.abs(this.delta) > 100) {
-		if (Math.abs(this.delta) > 150) momentumStep = 100;
-		if (Math.abs(this.delta) > 200) momentumStep = 200;
+	if (timeDiff < 150 && Math.abs(this.delta) > 150) {
+		if (Math.abs(this.delta) > 200) momentumStep = 100;
+		if (Math.abs(this.delta) > 250) momentumStep = 150;
 		if (this.delta < 0) {
 			this.currentMarginTop = this.currentMarginTop + momentumStep * this.itemHeight;
 		} else {
@@ -201,6 +203,7 @@ Scroller.prototype.populateScrollerItems = function() {
 		itemTemplate.text(value);
 		this.scrollerInner.append(itemTemplate);
 	}
+	//$(document).trigger("mrau:hideloader", ["populateScrollerItems"]);
 };
 
 /**
